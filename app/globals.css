@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #f7fbff;
+  color: #07111f;
+}
+
+::selection {
+  background: #1167d8;
+  color: #ffffff;
+}
+
+.blueprint-grid {
+  background-image:
+    linear-gradient(rgba(17, 103, 216, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17, 103, 216, 0.08) 1px, transparent 1px);
+  background-size: 34px 34px;
+}
+
+.glass-panel {
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(18px);
+}
+
+.project-shot {
+  transform: translateZ(0);
+}
+
+.project-shot:hover img {
+  transform: scale(1.025);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}
