@@ -10,6 +10,7 @@ import {
   Database,
   Download,
   ExternalLink,
+  FileText,
   Github,
   GraduationCap,
   Headphones,
@@ -96,6 +97,17 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeShot, setActiveShot] = useState(0);
 
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
   // Media Hub States
   const [mediaTab, setMediaTab] = useState("profile"); // profile | media | stats
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
@@ -106,23 +118,90 @@ export default function Home() {
   const [contactMsg, setContactMsg] = useState("");
   const [sendState, setSendState] = useState("idle"); // idle | sending | success
 
-  // Contact dispatch mock
+  // Contact dispatch with real mailto trigger
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!contactName || !contactMsg) return;
     setSendState("sending");
 
+    const subject = encodeURIComponent(`Portfolio Inquiry from ${contactName}`);
+    const body = encodeURIComponent(`Hi Henric,\n\n${contactMsg}\n\nBest regards,\n${contactName}`);
+
     setTimeout(() => {
       setSendState("success");
+      window.location.href = `mailto:caasirogelhenric@gmail.com?subject=${subject}&body=${body}`;
       setContactName("");
       setContactMsg("");
       setTimeout(() => setSendState("idle"), 4000);
-    }, 1500);
+    }, 1200);
   };
 
   return (
     <main className="min-h-screen bg-bg-obsidian text-white selection:bg-electric-blue selection:text-white font-sans">
       <div className="grain absolute inset-0 pointer-events-none z-40 opacity-50" />
+
+      {/* FULL-SCREEN MOBILE MENU OVERLAY MODAL */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-[9999] bg-[#030712] p-6 md:hidden flex flex-col justify-between overflow-y-auto animate-in fade-in duration-200">
+          <div>
+            <div className="flex items-center justify-between pb-6 border-b border-white/10 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="relative h-10 w-10 overflow-hidden rounded-lg border border-white/10 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                  <Image
+                    src="/assets/hc-logo.jpg"
+                    alt="Henric Caasi Logo"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <span className="text-base font-bold text-white tracking-wide">Web Developer</span>
+              </div>
+              <button
+                className="grid h-10 w-10 place-items-center rounded-md border border-white/12 bg-white/5 text-white active:scale-95 transition-all"
+                onClick={() => setMenuOpen(false)}
+                aria-label="Close navigation"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-electric-blue font-bold mb-2">{"//"} NAVIGATION MENU</span>
+              {links.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-xl px-5 py-4 text-base font-bold text-slate-100 bg-white/[0.03] hover:bg-electric-blue hover:text-white transition-all flex items-center justify-between border border-white/6 shadow-sm active:scale-98"
+                >
+                  {link.label}
+                  <ArrowUpRight className="h-5 w-5 text-electric-blue" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 pt-6 border-t border-white/10 mt-8">
+            <a
+              href="/assets/Henric_Caasi_Resume.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-4 text-sm font-bold text-white shadow-lg active:scale-95 transition-all"
+            >
+              <FileText className="h-4.5 w-4.5 text-electric-blue" />
+              View Resume (CV)
+            </a>
+            <a
+              href="#contact"
+              onClick={() => setMenuOpen(false)}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-electric-blue px-5 py-4 text-sm font-bold text-white shadow-[0_0_25px_rgba(59,130,246,0.4)] active:scale-95 transition-all"
+            >
+              Get In Touch
+              <ArrowUpRight className="h-4.5 w-4.5" />
+            </a>
+          </div>
+        </div>
+      )}
 
       {/* NAVIGATION HEADER */}
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/6 bg-bg-obsidian/85 backdrop-blur-xl">
@@ -179,38 +258,6 @@ export default function Home() {
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </nav>
-
-        {menuOpen && (
-          <div className="border-t border-white/6 bg-bg-obsidian px-5 py-4 md:hidden">
-            <div className="flex flex-col gap-2">
-              {links.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  className="rounded-md px-3 py-3 text-sm font-semibold text-muted hover:bg-white/5 hover:text-white"
-                >
-                  {link.label}
-                </a>
-              ))}
-              <a
-                href="/assets/Henric_Caasi_Resume.pdf"
-                download
-                className="mt-2 inline-flex items-center justify-center gap-2 rounded-md border border-white/12 bg-white/5 px-4 py-3 text-sm font-bold text-white"
-              >
-                <Download className="h-4 w-4" />
-                Download CV
-              </a>
-              <a
-                href="#contact"
-                onClick={() => setMenuOpen(false)}
-                className="inline-flex items-center justify-center gap-2 rounded-md bg-electric-blue px-4 py-3 text-sm font-bold text-white"
-              >
-                Contact Me
-              </a>
-            </div>
-          </div>
-        )}
       </header>
 
       {/* HERO SECTION */}
@@ -239,33 +286,42 @@ export default function Home() {
               Specialized in building responsive web user interfaces, dynamic dashboards, and interactive database workflows. Experienced in frontend development and mobile UI prototyping.
             </p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row w-full sm:w-auto justify-center lg:justify-start">
+            <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-3 w-full sm:w-auto justify-center lg:justify-start items-center">
               <a
                 href="#projects"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-electric-blue px-6 py-3.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(59,130,246,0.2)] transition hover:bg-blue-600 hover:-translate-y-0.5"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-electric-blue px-6 py-3.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(59,130,246,0.2)] transition hover:bg-blue-600 hover:-translate-y-0.5"
               >
                 View Projects
                 <ArrowUpRight className="h-4.5 w-4.5" />
               </a>
               <a
-                href="https://github.com/SeanPqul"
+                href="/assets/Henric_Caasi_Resume.pdf"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/12 bg-white/5 px-6 py-3.5 text-sm font-bold text-white transition hover:border-electric-blue hover:text-electric-blue hover:-translate-y-0.5"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-white/12 bg-white/5 px-6 py-3.5 text-sm font-bold text-white transition hover:border-electric-blue hover:text-electric-blue hover:-translate-y-0.5"
+              >
+                <FileText className="h-4.5 w-4.5 text-electric-blue" />
+                View CV
+              </a>
+              <a
+                href="https://github.com/Henric-Caasi"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-white/12 bg-white/5 px-6 py-3.5 text-sm font-bold text-white transition hover:border-electric-blue hover:text-electric-blue hover:-translate-y-0.5"
               >
                 <Github className="h-4.5 w-4.5" />
                 GitHub Profile
               </a>
             </div>
 
-            <div className="mt-10 grid gap-3 grid-cols-3 max-w-md w-full mx-auto lg:mx-0">
+            <div className="mt-10 grid gap-2.5 grid-cols-1 sm:grid-cols-3 max-w-md w-full mx-auto lg:mx-0">
               {[
                 { label: "Next.js & React", icon: Code2, color: "text-electric-blue border-electric-blue/10 bg-electric-blue/5" },
                 { label: "Figma Prototypes", icon: Layers, color: "text-blue-400 border-blue-400/10 bg-blue-400/5" },
                 { label: "Convex DB", icon: Database, color: "text-white border-white/10 bg-white/5" }
               ].map((item, index) => (
-                <div key={index} className={`flex flex-col items-center p-3 rounded-xl border text-center ${item.color}`}>
-                  <item.icon className="h-5 w-5 mb-2" />
+                <div key={index} className={`flex flex-row sm:flex-col items-center justify-center sm:justify-start gap-2 sm:gap-0 p-3 rounded-xl border text-center ${item.color}`}>
+                  <item.icon className="h-4.5 w-4.5 sm:mb-2 shrink-0" />
                   <p className="text-xs font-bold text-white/95">{item.label}</p>
                 </div>
               ))}
@@ -280,19 +336,19 @@ export default function Home() {
               <div className="glass-panel w-full rounded-2xl overflow-hidden shadow-clean border border-white/8 flex flex-col relative transition-all duration-300">
                 
                 {/* Window Header */}
-                <div className="border-b border-white/8 bg-slate-900/60 px-4 py-3 flex items-center justify-between select-none">
-                  <div className="flex items-center gap-2">
+                <div className="border-b border-white/8 bg-slate-900/60 px-3 sm:px-4 py-3 flex items-center justify-between select-none">
+                  <div className="flex items-center gap-1.5 shrink-0">
                     <span className="h-3 w-3 rounded-full bg-red-500/80" />
                     <span className="h-3 w-3 rounded-full bg-yellow-500/80" />
                     <span className="h-3 w-3 rounded-full bg-green-500/80" />
                   </div>
                   
                   {/* Tabs Selector */}
-                  <div className="flex gap-1 bg-black/40 p-0.5 rounded-lg border border-white/6 font-mono text-[10px] sm:text-xs font-bold text-muted">
+                  <div className="flex gap-1 bg-black/40 p-0.5 rounded-lg border border-white/6 font-mono text-[10px] sm:text-xs font-bold text-muted overflow-x-auto hide-scrollbar max-w-[calc(100%-4rem)]">
                     {[
-                      { id: "profile", label: "profile.jpg" },
-                      { id: "media", label: "my_media.gallery" },
-                      { id: "stats", label: "core_metrics.json" }
+                      { id: "profile", label: "profile.jpg", short: "profile" },
+                      { id: "media", label: "my_media.gallery", short: "gallery" },
+                      { id: "stats", label: "core_metrics.json", short: "metrics" }
                     ].map((tab) => (
                       <button
                         key={tab.id}
@@ -300,17 +356,18 @@ export default function Home() {
                           setMediaTab(tab.id);
                           if (tab.id === "media") setActiveMediaIndex(0);
                         }}
-                        className={`px-3 sm:px-4 py-1.5 rounded-md transition-colors ${
+                        className={`px-2.5 sm:px-4 py-1.5 rounded-md transition-colors whitespace-nowrap ${
                           mediaTab === tab.id 
                             ? "bg-electric-blue text-white" 
                             : "hover:text-white"
                         }`}
                       >
-                        {tab.label}
+                        <span className="hidden sm:inline">{tab.label}</span>
+                        <span className="sm:hidden">{tab.short}</span>
                       </button>
                     ))}
                   </div>
-                  <div className="w-10" />
+                  <div className="hidden sm:block w-8" />
                 </div>
 
                 {/* Tab Pane Workspace */}
@@ -605,7 +662,7 @@ export default function Home() {
 
                 <div className="pt-2 flex flex-wrap gap-3">
                   <a
-                    href="https://github.com/SeanPqul/emedicard_project"
+                    href="https://github.com/Henric-Caasi/emedicard_project"
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-5 py-2.5 text-xs font-bold text-white transition hover:border-electric-blue hover:text-electric-blue"
@@ -1031,7 +1088,7 @@ export default function Home() {
                     <span>LinkedIn</span>
                   </a>
                   <a
-                    href="https://github.com/SeanPqul"
+                    href="https://github.com/Henric-Caasi"
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center gap-3 rounded-xl border border-white/8 bg-white/5 p-4 font-bold text-white transition hover:border-electric-blue hover:text-electric-blue"
