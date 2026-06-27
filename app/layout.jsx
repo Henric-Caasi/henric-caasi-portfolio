@@ -1,15 +1,17 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Henric_Caasi | Portfolio",
+  title: "Rogel Henric M. Caasi | Web Developer",
   description:
-    "Portfolio of Rogel Henric M. Caasi, BSIT graduate focused on full-stack development, mobile apps, and IT support."
+    "Portfolio of Rogel Henric M. Caasi, a web developer building React, Next.js, Laravel, and mobile-friendly systems."
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="font-sans antialiased bg-bg-deep text-white">
+        {children}
+      </body>
     </html>
   );
 }

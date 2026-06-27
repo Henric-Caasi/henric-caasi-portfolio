@@ -26,5 +26,5 @@ Open `http://localhost:3000`.
 ## Update Content
 
 - Resume: replace `public/assets/Henric_Caasi_Resume.pdf`.
-- Project screenshots: replace files inside `public/assets`.
+- Project screenshots and personal photos: replace files inside `public/assets`.
 - Main page content: edit `app/page.jsx`.

@@ -3,39 +3,76 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   scroll-behavior: smooth;
 }
 
 body {
-  background: #f7fbff;
-  color: #07111f;
+  background: #030712;
+  color: #ffffff;
+  font-family: var(--font-inter), sans-serif;
+  overflow-x: hidden;
 }
 
 ::selection {
-  background: #1167d8;
+  background: #3b82f6;
   color: #ffffff;
 }
 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #030712;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  border: 2px solid #030712;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.6);
+}
+
+/* Blue Technical Grid Background */
 .blueprint-grid {
   background-image:
-    linear-gradient(rgba(17, 103, 216, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(17, 103, 216, 0.08) 1px, transparent 1px);
-  background-size: 34px 34px;
+    linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+  background-size: 36px 36px;
 }
 
+/* Glassmorphism Panel */
 .glass-panel {
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(17, 24, 39, 0.6);
+  backdrop-filter: blur(16px);
 }
 
-.project-shot {
-  transform: translateZ(0);
+/* Simulated Film Grain Texture */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
-.project-shot:hover img {
-  transform: scale(1.025);
+/* Code Highlights */
+.code-keyword { color: #f472b6; }
+.code-string { color: #34d399; }
+.code-function { color: #60a5fa; }
+.code-comment { color: #64748b; }
+.code-number { color: #fbbf24; }
+
+/* Responsive Grid Columns hide scrollbars */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -44,3 +81,5 @@ body {
     transition: none !important;
   }
 }
+
+
